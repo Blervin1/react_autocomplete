@@ -14,20 +14,21 @@ export const Autocomplete: React.FC<Props> = ({
   delay = 300,
 }) => {
   const [query, setQuery] = useState('');
-  const [appliedQuary, setAppliedQuery] = useState('');
+  const [appliedQuery, setAppliedQuery] = useState('');
   const [showList, setShowList] = useState(false);
 
   const applyQuary = useCallback(debounce(setAppliedQuery, delay), [
     setAppliedQuery,
+    delay,
   ]);
 
   const filteredLists = useMemo(() => {
     return peopleFromServer.filter(person =>
-      person.name.toLowerCase().includes(appliedQuary.toLowerCase()),
+      person.name.toLowerCase().includes(appliedQuery.toLowerCase()),
     );
-  }, [appliedQuary]);
+  }, [appliedQuery]);
 
-  const onselectedPerson = (person: Person) => {
+  const onSelectedPerson = (person: Person) => {
     setQuery(person?.name);
     onSelect(person);
     setShowList(false);
@@ -40,7 +41,7 @@ export const Autocomplete: React.FC<Props> = ({
     onSelect(null);
   };
 
-  const handlBlurChange = (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlurChange = (event: React.FocusEvent<HTMLInputElement>) => {
     if (!event.relatedTarget) {
       setShowList(false);
     }
@@ -57,7 +58,7 @@ export const Autocomplete: React.FC<Props> = ({
           value={query}
           onChange={handleQueryChange}
           onFocus={() => setShowList(true)}
-          onBlur={handlBlurChange}
+          onBlur={handleBlurChange}
         />
       </div>
 
@@ -70,7 +71,7 @@ export const Autocomplete: React.FC<Props> = ({
                   className="dropdown-item button is-white"
                   data-cy="suggestion-item"
                   key={person.name}
-                  onClick={() => onselectedPerson(person)}
+                  onClick={() => onSelectedPerson(person)}
                 >
                   <p
                     className={classNames('has-text-link', 'is-clickable', {
